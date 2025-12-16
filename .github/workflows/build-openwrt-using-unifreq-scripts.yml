@@ -186,6 +186,7 @@ jobs:
           armsr_tarfile_path="opt/download"
           [[ -d "${armsr_tarfile_path}" ]] || mkdir -p ${armsr_tarfile_path}
           sudo rm -rf /opt && sudo ln -sf /builder/opt /opt
+          ln -sf /builder/opt ${{ github.workspace }}/opt
 
           # Get name (file name) and url (API asset URL)
           latest_version=$(curl -s \
@@ -226,7 +227,7 @@ jobs:
         uses: ophub/flippy-openwrt-actions@main
         if: ${{ steps.download.outputs.status }} == 'success' && !cancelled()
         env:
-          OPENWRT_ARMSR: /builder/opt/download/*rootfs.tar.gz
+          OPENWRT_ARMSR: opt/download/*rootfs.tar.gz
           PACKAGE_SOC: ${{ inputs.openwrt_soc }}
           KERNEL_REPO_URL: ${{ inputs.kernel_repo }}
           KERNEL_VERSION_NAME: ${{ inputs.openwrt_kernel }}
